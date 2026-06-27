@@ -136,10 +136,8 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
   box-shadow:0 2px 12px rgba(0,0,0,.3);
 }
 .top-bar-logo{
-  width:var(--sidebar);
   display:flex;align-items:center;gap:10px;
   padding:0 20px;
-  border-right:1px solid rgba(255,255,255,.1);
 }
 .top-bar-logo .ico{font-size:22px}
 .top-bar-logo span{font-family:'Raleway',sans-serif;font-weight:700;color:#fff;font-size:14px;line-height:1.2}
@@ -168,13 +166,15 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 /* ===== SIDEBAR ===== */
 #sidebar{
   position:fixed;top:56px;left:0;bottom:0;
-  width:var(--sidebar);
+  width:260px;
   background:var(--navy2);
   overflow-y:auto;
   padding:16px 0 24px;
   z-index:90;
+  transform:translateX(-260px);
   transition:transform .3s ease;
 }
+#sidebar.open{transform:translateX(0)}
 .sidebar-section{
   padding:8px 16px 4px;
   font-size:10px;font-weight:700;letter-spacing:1.5px;
@@ -213,11 +213,13 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 
 /* ===== MAIN CONTENT ===== */
 #main{
-  margin-left:var(--sidebar);
+  margin-left:0;
   margin-top:56px;
   padding:32px 40px;
   min-height:calc(100vh - 56px);
+  transition:margin-left .3s ease;
 }
+#sidebar.open ~ #main,body.sidebar-open #main{margin-left:260px}
 .section{display:none}
 .section.active{display:block;animation:fadeInSection .4s ease}
 @keyframes fadeInSection{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
@@ -790,32 +792,34 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 }
 
 
-/* ── VISITOR COUNTER BADGE ── */
-#visitor-badge{
-  position:fixed;bottom:20px;left:20px;z-index:8000;
-  background:linear-gradient(135deg,#0A2040,#1565C0);
-  color:#fff;border-radius:12px;padding:8px 14px;
-  font-size:11px;font-weight:700;cursor:pointer;
-  box-shadow:0 4px 16px rgba(0,0,0,.35);
-  display:flex;align-items:center;gap:7px;
-  transition:all .2s;font-family:'Nunito',sans-serif;
-  border:1px solid rgba(255,255,255,.15);
+/* ── TOPBAR VISITOR COUNT ── */
+#topbar-visitors{
+  display:flex;align-items:center;gap:5px;
+  font-size:11px;font-weight:700;color:rgba(255,255,255,.55);
+  padding:0 14px;white-space:nowrap;position:relative;
+  user-select:none;-webkit-user-select:none;
 }
-#visitor-badge:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
-#visitor-badge .vb-icon{font-size:14px}
-#visitor-badge .vb-count{font-size:13px;font-weight:900;color:#00BCD4}
-#visitor-badge::after{
+#topbar-visitors .tv-count{color:#00BCD4;font-size:13px;font-weight:900}
+#topbar-visitors.admin-hold::after{
   content:'';
-  position:absolute;inset:-3px;border-radius:14px;
+  position:absolute;inset:-4px;border-radius:10px;
   border:2px solid transparent;
-  background:conic-gradient(#00BCD4 var(--hold-pct,0%), transparent var(--hold-pct,0%)) border-box;
+  background:conic-gradient(#00BCD4 var(--hold-pct,0%),transparent var(--hold-pct,0%)) border-box;
   -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
   -webkit-mask-composite:destination-out;mask-composite:exclude;
-  opacity:0;transition:opacity .1s;pointer-events:none;
+  pointer-events:none;
 }
-#visitor-badge.holding::after{opacity:1;}
-@keyframes holdProgress{from{--hold-pct:0%}to{--hold-pct:100%}}
 @property --hold-pct{syntax:'<percentage>';inherits:false;initial-value:0%}
+@keyframes holdProgress{from{--hold-pct:0%}to{--hold-pct:100%}}
+/* ── RESULT MODAL ── */
+#result-modal{
+  display:none;position:fixed;inset:0;z-index:9400;
+  background:rgba(5,15,30,.92);backdrop-filter:blur(12px);
+  align-items:center;justify-content:center;overflow-y:auto;
+}
+#result-modal .rm-inner{
+  max-width:560px;width:90%;margin:auto;padding:40px 20px;
+}
 /* ── VISITOR POPUP ── */
 #visitor-popup{
   position:fixed;inset:0;z-index:9000;
@@ -876,6 +880,10 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 .stat-card .stat-val{font-size:28px;font-weight:900;color:#00BCD4;font-family:'Raleway',sans-serif}
 .stat-card .stat-label{font-size:11px;color:rgba(255,255,255,.5);margin-top:4px;font-weight:600}
 .stat-card .stat-icon{font-size:20px;margin-bottom:6px}
+/* override: stat-ribbon cards must stay dark-gradient not transparent */
+.stat-ribbon .stat-card{background:linear-gradient(135deg,var(--navy),var(--navy2))!important;color:#fff!important;border:none!important}
+.stat-ribbon .stat-card .sv{font-family:'Raleway',sans-serif;font-size:28px;font-weight:800;color:var(--teal2)}
+.stat-ribbon .stat-card .sl{font-size:12px;color:rgba(255,255,255,.65);margin-top:2px;line-height:1.4}
 .analytics-section{padding:0 20px 20px}
 .analytics-section h3{color:#00BCD4;font-size:12px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,.06);padding-bottom:8px}
 .score-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
@@ -1073,10 +1081,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 
   .analytics-grid { grid-template-columns:repeat(2,1fr) !important; }
 
-  #visitor-badge { bottom:12px; left:12px; padding:6px 10px; font-size:10px; }
-
-
-
   .learning-objectives { padding:12px 14px; }
 
   /* quiz */
@@ -1213,22 +1217,31 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 <div id="cover">
   <div class="cover-bg-dots"></div>
   <div class="cover-content">
-    <div class="cover-badge">📚 ICU Nursing eLearning Module</div>
-    <div class="cover-icon">🏥</div>
+    <div style="height:3px;background:linear-gradient(90deg,var(--teal),var(--teal2),#29B6F6);border-radius:2px;margin-bottom:28px"></div>
+    <div class="cover-badge">ICU NURSING · ELEARNING MODULE</div>
+    <div style="font-size:12px;color:rgba(255,255,255,.4);margin-bottom:22px;letter-spacing:.5px">Faculty of Nursing · Capital University, Egypt · 2026</div>
     <h1 class="cover-title">Communication with<br><span>Unconscious Patients</span></h1>
     <p class="cover-sub">A comprehensive evidence-based training module for critical care nurses — enhancing knowledge, skills, and compassionate practice</p>
-    <div class="cover-meta">
-      <p><strong>Prepared by:</strong> Ms. Amnah Mohammed Howthan</p>
-      <p>Medical-Surgical Nursing · Capital University, Egypt</p>
-      <hr>
-      <p><strong>Supervisors:</strong> Dr. Zainab Hussein Ali (Professor) · Dr. Rasha Mohamed Elauoty (Lecturer)</p>
-      <p>Faculty of Nursing, Capital University · 2026</p>
+    <div style="border-top:1px solid rgba(255,255,255,.1);margin:20px 0"></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:13px;color:rgba(255,255,255,.75);margin-bottom:8px">
+      <div>
+        <div style="font-size:10px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Prepared by</div>
+        <div style="font-weight:700;color:#fff">Ms. Amnah Mohammed Howthan</div>
+        <div style="font-size:12px;color:rgba(255,255,255,.5)">Medical-Surgical Nursing</div>
+      </div>
+      <div>
+        <div style="font-size:10px;font-weight:800;color:var(--teal2);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px">Supervisors</div>
+        <div style="font-weight:700;color:#fff;font-size:12px">Dr. Zainab Hussein Ali</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.5)">Professor · Faculty of Nursing</div>
+        <div style="font-weight:700;color:#fff;font-size:12px;margin-top:4px">Dr. Rasha Mohamed Elauoty</div>
+        <div style="font-size:11px;color:rgba(255,255,255,.5)">Lecturer · Faculty of Nursing</div>
+      </div>
     </div>
+    <div style="border-top:1px solid rgba(255,255,255,.1);margin:20px 0"></div>
     <div class="cover-stats">
       <div class="cover-stat"><div class="num">2</div><div class="lbl">Chapters</div></div>
       <div class="cover-stat"><div class="num">10</div><div class="lbl">Topics</div></div>
       <div class="cover-stat"><div class="num">15</div><div class="lbl">Quiz Questions</div></div>
-      <div class="cover-stat"><div class="num">🎓</div><div class="lbl">Certificate</div></div>
     </div>
     <div class="reg-form-card">
       <h3>👤 Please introduce yourself</h3>
@@ -1246,7 +1259,8 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
         <input type="text" id="reg-dept" placeholder="e.g. ICU, NICU, CCU" autocomplete="organization">
       </div>
     </div>
-    <button class="btn-start" id="btn-start-learn" onclick="startCourse()" disabled>Start Learning →</button>
+    <button class="btn-start" id="btn-start-learn" onclick="startCourse()" disabled style="width:100%">Start Learning →</button>
+    <p id="cover-hint" style="text-align:center;font-size:11px;color:rgba(255,255,255,.3);margin-top:10px">Enter your name above to begin</p>
   </div>
 </div>
 
@@ -1259,7 +1273,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
   <div class="top-bar">
     <button class="hamburger" onclick="toggleSidebar()">☰</button>
     <div class="top-bar-logo">
-      <span class="ico">🏥</span>
       <span>ICU<br>Communication</span>
     </div>
     <div class="top-bar-right">
@@ -1267,12 +1280,13 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
         <div class="progress-label"><span>Course Progress</span><span id="pct">0%</span></div>
         <div class="progress-bar-outer"><div class="progress-bar-inner" id="progBar" style="width:0%"></div></div>
       </div>
+      <div id="topbar-visitors" title="Total visitors">👥 <span class="tv-count" id="tv-num">…</span></div>
       <div class="score-badge" id="scoreBadge">⭐ 0 pts</div>
     </div>
   </div>
 
   <!-- Sidebar -->
-  <div id="sidebar">
+  <div id="sidebar" class="open">
     <div class="nav-chapter-label">Course Overview</div>
     <div class="nav-item active" onclick="showSection('intro')" id="nav-intro">
       <span class="nav-ico">🏠</span> Introduction
@@ -1324,14 +1338,10 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
       <span class="nav-ico">✏️</span> Knowledge Check
       <span class="nav-check">✓</span>
     </div>
-    <div class="nav-item" onclick="showSection('complete')" id="nav-complete">
-      <span class="nav-ico">🎓</span> Certificate
-      <span class="nav-check">✓</span>
-    </div>
   </div>
 
   <!-- Mobile Overlay -->
-  <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+  <div class="overlay" id="overlay"></div>
 
   <!-- Main Content -->
   <div id="main">
@@ -2157,16 +2167,7 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
         <h1>✏️ Knowledge Check Quiz</h1>
         <p>15 questions based on the course content — test your understanding</p>
       </div>
-      <div class="pass-threshold" role="note" aria-label="Passing requirement">
-        <div>
-          <div class="pt-label">Passing Score Required</div>
-          <div class="pt-note">To earn your Certificate of Completion</div>
-        </div>
-        <div style="text-align:right">
-          <div class="pt-value">60% or above</div>
-          <div class="pt-note">9 out of 15 correct answers</div>
-        </div>
-      </div>
+      <div class="pass-threshold" style="font-size:13px;font-weight:600;color:var(--navy);padding:10px 14px">Passing score: 60% — answer 9 out of 15 questions correctly</div>
       <div class="card">
         <div class="quiz-progress-bar">
           <div class="quiz-progress-fill" id="qProgress" style="width:0%"></div>
@@ -2187,12 +2188,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
       </div>
     </div>
 
-    <!-- COMPLETE -->
-    <div class="section" id="section-complete">
-      <div class="result-wrap" id="result-wrap">
-        <!-- filled by finishQuiz() -->
-      </div>
-    </div>
 
   </div><!-- /main -->
 </div><!-- /app -->
@@ -2344,10 +2339,7 @@ function startCourse(){
 
 // ===== SIDEBAR =====
 function toggleSidebar(){
-  const sb=document.getElementById('sidebar');
-  const ov=document.getElementById('overlay');
-  sb.classList.toggle('open');
-  ov.classList.toggle('show');
+  document.getElementById('sidebar').classList.toggle('open');
 }
 
 // ===== SHOW SECTION =====
@@ -2360,8 +2352,6 @@ function showSection(id){
   window.scrollTo({top:56,behavior:'smooth'});
   markVisited(id);
   updateProgress();
-  document.getElementById('sidebar').classList.remove('open');
-  document.getElementById('overlay').classList.remove('show');
   // Firebase EVENT B
   try{ if(window.db) db.ref('analytics/sections/'+id).transaction(v=>(v||0)+1); }catch(e){}
 }
@@ -2430,6 +2420,10 @@ function startQuiz(){
   score=0;
   quizAnswers=new Array(questions.length).fill(null);
   document.getElementById('qStart').style.display='none';
+  const loBox=document.querySelector('#section-quiz .learning-objectives');
+  if(loBox) loBox.style.display='none';
+  const ptBox=document.querySelector('#section-quiz .pass-threshold');
+  if(ptBox) ptBox.style.display='none';
   renderQuestion();
 }
 
@@ -2488,7 +2482,6 @@ function nextQuestion(){
 function finishQuiz(){
   quizFinished=true;
   markVisited('quiz');
-  markVisited('complete');
   updateProgress();
   const pct=Math.round((score/questions.length)*100);
   const passed=pct>=60;
@@ -2541,7 +2534,8 @@ function finishQuiz(){
     },100);
   }
 
-  showSection('complete');
+  const rm=document.getElementById('result-modal');
+  if(rm){rm.style.display='flex';}
 
   // Firebase EVENT C
   try{
@@ -2562,6 +2556,8 @@ function finishQuiz(){
 }
 
 function retakeQuiz(){
+  const rm=document.getElementById('result-modal');
+  if(rm) rm.style.display='none';
   quizFinished=false;
   score=0;totalPoints=0;currentQ=0;quizStarted=false;
   quizAnswers=new Array(questions.length).fill(null);
@@ -2574,10 +2570,16 @@ function retakeQuiz(){
   document.getElementById('qNext').style.display='none';
   document.getElementById('qFinish').style.display='none';
   document.getElementById('qStart').style.display='block';
+  const loBox=document.querySelector('#section-quiz .learning-objectives');
+  if(loBox) loBox.style.display='';
+  const ptBox=document.querySelector('#section-quiz .pass-threshold');
+  if(ptBox) ptBox.style.display='';
   showSection('quiz');
 }
 
 function showReviewMode(){
+  const rm=document.getElementById('result-modal');
+  if(rm) rm.style.display='none';
   showSection('quiz');
 }
 
@@ -3084,11 +3086,11 @@ setTimeout(loadV,600);
 })();
 </script>
 
-<!-- ── VISITOR COUNTER BADGE ── -->
-<div id="visitor-badge" onclick="openAnalytics()" title="Click to view analytics">
-  <span class="vb-icon">👥</span>
-  <span>Visitors: <span class="vb-count" id="vb-num">...</span></span>
-  <span style="opacity:.4;font-size:10px">| 📊</span>
+<!-- ── RESULT MODAL ── -->
+<div id="result-modal" style="display:none;position:fixed;inset:0;z-index:9400;background:rgba(5,15,30,.92);backdrop-filter:blur(12px);align-items:center;justify-content:center;overflow-y:auto;">
+  <div class="rm-inner">
+    <div class="result-wrap" id="result-wrap"></div>
+  </div>
 </div>
 
 <!-- ── ANALYTICS MODAL ── -->
@@ -3132,68 +3134,64 @@ var SEC_NAMES = {
 window._isAdmin = (window.location.hash === '#admin');
 if(window._isAdmin){ history.replaceState(null,'',window.location.pathname); }
 
-// ── Visitor popup (shown to non-admin) ──
-function showVisitorPopup(){
-  var existing = document.getElementById('visitor-popup');
-  if(existing) existing.remove();
-  var popup = document.createElement('div');
-  popup.id = 'visitor-popup';
-  popup.innerHTML =
-    '<div id="visitor-popup-box">'
-    +'<button id="visitor-popup-close" onclick="document.getElementById(\'visitor-popup\').remove()">×</button>'
-    +'<div class="vp-icon">👥</div>'
-    +'<div class="vp-count" id="vp-count-num">…</div>'
-    +'<div class="vp-label">people visited this module</div>'
-    +'</div>';
-  popup.addEventListener('click',function(e){ if(e.target===popup) popup.remove(); });
-  document.body.appendChild(popup);
+// ── Admin: hide registration form, enable Start Learning ──
+if(window._isAdmin){
+  document.addEventListener('DOMContentLoaded', function(){
+    var regBox = document.querySelector('.reg-form-card');
+    if(regBox) regBox.style.display = 'none';
+    // Pre-fill hidden input so startCourse() name-check passes
+    var nameInput = document.getElementById('reg-name');
+    if(nameInput) nameInput.value = 'Admin';
+    currentUser = { name:'Admin', jobTitle:'Administrator', department:'—' };
+    var startBtn = document.getElementById('btn-start-learn');
+    if(startBtn) startBtn.disabled = false;
+    var hint = document.getElementById('cover-hint');
+    if(hint) hint.style.display = 'none';
+  });
+}
+
+// ── Topbar visitor count: fetch + auto-refresh ──
+function fetchTopbarVisitors(){
   try{
     if(window.db){
       db.ref('analytics/visits/total').once('value').then(function(s){
-        var el=document.getElementById('vp-count-num');
-        if(el) el.textContent=s.val()||'—';
+        var el=document.getElementById('tv-num');
+        if(el) el.textContent=s.val()||'0';
       }).catch(function(){
-        var el=document.getElementById('vp-count-num');
+        var el=document.getElementById('tv-num');
         if(el) el.textContent='—';
       });
-    } else {
-      var el=document.getElementById('vp-count-num');
-      if(el) el.textContent='—';
     }
-  }catch(e){
-    var el2=document.getElementById('vp-count-num');
-    if(el2) el2.textContent='—';
-  }
+  }catch(e){}
 }
+setInterval(fetchTopbarVisitors, 60000);
 
-// ── Badge action: admin → dashboard, public → popup ──
-function badgeAction(){
-  if(window._isAdmin){ openAnalytics(); }
-  else { showVisitorPopup(); }
-}
-
-// ── Visitor badge: long press (2 s) ──
-var badge = document.getElementById('visitor-badge');
-if(badge){
-  function startHold(){
-    badge.classList.add('holding');
-    badge.style.setProperty('--hold-pct','0%');
-    badge.style.animation='holdProgress 2s linear forwards';
-    holdTimer = setTimeout(function(){
-      cancelHold();
-      badgeAction();
-    }, 2000);
+// ── Admin: long-press on topbar visitor count → dashboard ──
+if(window._isAdmin){
+  var tvEl = document.getElementById('topbar-visitors');
+  if(tvEl){
+    tvEl.style.cursor = 'pointer';
+    tvEl.title = 'Hold 2s to open analytics';
+    function tvStartHold(){
+      tvEl.classList.add('admin-hold');
+      tvEl.style.setProperty('--hold-pct','0%');
+      tvEl.style.animation='holdProgress 2s linear forwards';
+      holdTimer = setTimeout(function(){
+        tvCancelHold();
+        openAnalytics();
+      }, 2000);
+    }
+    function tvCancelHold(){
+      clearTimeout(holdTimer);
+      tvEl.classList.remove('admin-hold');
+      tvEl.style.animation='none';
+      tvEl.style.setProperty('--hold-pct','0%');
+    }
+    tvEl.addEventListener('pointerdown', tvStartHold);
+    tvEl.addEventListener('pointerup',   tvCancelHold);
+    tvEl.addEventListener('pointerleave',tvCancelHold);
+    tvEl.addEventListener('contextmenu', function(e){ e.preventDefault(); });
   }
-  function cancelHold(){
-    clearTimeout(holdTimer);
-    badge.classList.remove('holding');
-    badge.style.animation='none';
-    badge.style.setProperty('--hold-pct','0%');
-  }
-  badge.addEventListener('pointerdown', startHold);
-  badge.addEventListener('pointerup',   cancelHold);
-  badge.addEventListener('pointerleave',cancelHold);
-  badge.addEventListener('contextmenu', function(e){ e.preventDefault(); });
 }
 
 // ── Keyboard shortcut Ctrl+Shift+A ──
@@ -3386,7 +3384,7 @@ document.addEventListener('DOMContentLoaded',function(){
     try{
       db.ref('analytics/visits/total').once('value').then(function(s){
         var n=s.val()||0;
-        var el=document.getElementById('vb-num');
+        var el=document.getElementById('tv-num');
         if(el) el.textContent=n;
       });
     }catch(e){}
@@ -3771,10 +3769,10 @@ document.addEventListener('DOMContentLoaded', injectVisuals);
     };
     var app = firebase.initializeApp(firebaseConfig);
     window.db = firebase.database();
-    // Update visitor badge once Firebase is ready
+    // Update topbar visitor count once Firebase is ready
     db.ref('analytics/visits/total').once('value').then(function(s){
       var n=s.val()||0;
-      var el=document.getElementById('vb-num');
+      var el=document.getElementById('tv-num');
       if(el) el.textContent=n;
     });
   }catch(e){
