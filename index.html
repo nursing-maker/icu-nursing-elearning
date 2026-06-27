@@ -782,9 +782,9 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 #anim-voice-sel{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
   color:#fff;border-radius:6px;padding:4px 8px;font-size:11px;font-family:'Nunito',sans-serif;font-weight:700;cursor:pointer;outline:none}
 #anim-voice-sel option{background:#0A1628;color:#fff}
-#anim-mute{padding:4px 10px;border-radius:6px;border:none;background:rgba(255,255,255,.07);
+#anim-mute,#anim-test-voice{padding:4px 10px;border-radius:6px;border:none;background:rgba(255,255,255,.07);
   color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap}
-#anim-mute:hover{background:#00695C}
+#anim-mute:hover,#anim-test-voice:hover{background:#00695C}
 @media(max-width:600px){
   .icu-phase-grid{grid-template-columns:1fr}
   #anim-sub-txt{font-size:12px}
@@ -2612,6 +2612,7 @@ document.addEventListener('DOMContentLoaded', function(){
       <div id="anim-prog" onclick="animSeekClick(event)"><div id="anim-pbar"></div></div>
       <span id="anim-scene-info">Scene 1/3</span>
       <select id="anim-voice-sel" onchange="animChangeVoice()"></select>
+      <button id="anim-test-voice" onclick="testVoice()" title="Test selected voice">🔊 Test</button>
       <button id="anim-mute" onclick="animToggleMute()">&#128266;</button>
     </div>
   </div>
@@ -2649,13 +2650,63 @@ var AC=null,muted=false,lastBp=0;
 function initAC(){if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();}
 function bip(){if(muted||!AC)return;var t=AC.currentTime;var o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);o.type="sine";o.frequency.value=880;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.10,t+.005);g.gain.setValueAtTime(.10,t+.06);g.gain.exponentialRampToValueAtTime(.0001,t+.12);o.start(t);o.stop(t+.13);var o2=AC.createOscillator(),g2=AC.createGain();o2.connect(g2);g2.connect(AC.destination);o2.type="sine";o2.frequency.value=1760;g2.gain.setValueAtTime(0,t);g2.gain.linearRampToValueAtTime(.022,t+.005);g2.gain.exponentialRampToValueAtTime(.0001,t+.07);o2.start(t);o2.stop(t+.08);}
 var voices=[],selV=null,wds=[],wIdx=0,wTmr=null,spk=false;
-function loadV(){voices=window.speechSynthesis.getVoices();var sel=document.getElementById("anim-voice-sel");if(!sel)return;sel.innerHTML="";var sc=function(v){var s2=0;if(/google/i.test(v.name))s2+=50;if(/natural|neural/i.test(v.name))s2+=40;if(/microsoft/i.test(v.name))s2+=20;if(/en-US/i.test(v.lang))s2+=10;return s2;};voices.sort(function(a,b){return sc(b)-sc(a);});voices.forEach(function(v,i){var o=document.createElement("option");o.value=i;o.textContent=(/google/i.test(v.name)?"star ":"")+v.name;if(!i)o.selected=true;sel.appendChild(o);});if(voices.length)selV=voices[0];}
-window.speechSynthesis.onvoiceschanged=loadV;setTimeout(loadV,500);
-window.animChangeVoice=function(){var i=parseInt(document.getElementById("anim-voice-sel").value);if(!isNaN(i))selV=voices[i];};
+var BAD_NAMES=['zarvox','whisper','trinoids','cellos','bells','boing','bubbles','bad news','good news','hysterical','pipe organ','wobble','bahh','deranged','junior','kathy','ralph','fred','victoria','albert'];
+function loadV(){
+  var all=window.speechSynthesis.getVoices();
+  if(!all||!all.length)return;
+  var good=all.filter(function(v){
+    var n=v.name.toLowerCase();
+    var isBad=BAD_NAMES.some(function(b){return n.includes(b);});
+    return v.lang.toLowerCase().startsWith('en')&&!isBad;
+  });
+  if(!good.length)good=all;
+  function sc(v){var n=v.name.toLowerCase(),s=0;
+    if(/google/i.test(n))s+=100;
+    if(/natural|enhanced|premium/i.test(n))s+=80;
+    if(/samantha/i.test(n))s+=90;
+    if(/karen|daniel|moira/i.test(n))s+=70;
+    if(/en-us/i.test(v.lang))s+=20;
+    if(/en-gb/i.test(v.lang))s+=15;
+    if(v.localService)s+=10;
+    return s;
+  }
+  good.sort(function(a,b){return sc(b)-sc(a);});
+  var sel=document.getElementById('anim-voice-sel');
+  if(!sel)return;
+  sel.innerHTML='';
+  good.forEach(function(v,i){
+    var o=document.createElement('option');
+    o.value=i;
+    o.textContent=(sc(v)>=80?'⭐ ':'')+v.name;
+    if(!i)o.selected=true;
+    sel.appendChild(o);
+  });
+  voices=all;
+  window._filteredVoices=good;
+  window._selectedVoice=good[0]||null;
+  selV=window._selectedVoice;
+}
+window.speechSynthesis.onvoiceschanged=loadV;
+[200,500,1000,2000].forEach(function(t){setTimeout(loadV,t);});
+window.animChangeVoice=function(){
+  var i=parseInt(document.getElementById('anim-voice-sel').value);
+  if(!isNaN(i)&&window._filteredVoices){
+    window._selectedVoice=window._filteredVoices[i];
+    selV=window._selectedVoice;
+  }
+};
+window.testVoice=function(){
+  window.speechSynthesis.cancel();
+  var u=new SpeechSynthesisUtterance('Hello, I am your ICU nursing instructor.');
+  var v=window._selectedVoice||selV;
+  if(v)u.voice=v;
+  u.rate=0.9;u.pitch=1.05;u.volume=0.9;
+  window.speechSynthesis.speak(u);
+};
 window.animToggleMute=function(){muted=!muted;var b=document.getElementById("anim-mute");if(b)b.textContent=muted?"Mute off":"Sound on";if(muted){window.speechSynthesis.cancel();spk=false;clrWT();}};
 function clrWT(){if(wTmr){clearInterval(wTmr);wTmr=null;}}
 function showWds(){var el=document.getElementById("anim-sub-txt");if(!el)return;el.innerHTML=wds.map(function(w,i){return "<span class='aw"+(i<wIdx?" on":i===wIdx?" now":"")+"'>"+w+"</span>";}).join(" ");}
-function startSpeak(text,phase,durMs){clrWT();wds=text.split(" ");wIdx=0;var phEl=document.getElementById("anim-phase-lbl");if(phEl)phEl.textContent=phase;showWds();var iv=Math.max(380,(durMs*1.25)/wds.length); /* slower fallback — boundary events lead */if(muted){var muteIv=Math.max(250,(durMs*0.92)/wds.length);wTmr=setInterval(function(){if(wIdx<wds.length){wIdx++;showWds();}else clrWT();},muteIv);return;}window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);if(selV)u.voice=selV;u.volume=.92;u.rate=.88;u.pitch=1.05;u.onstart=function(){spk=true;clrWT();wIdx=0;/* Start conservative timer — boundary events will override */var baseIv=Math.max(480,(durMs*1.1)/wds.length);wTmr=setInterval(function(){if(wIdx<wds.length){wIdx++;showWds();}else clrWT();},baseIv);};u.onend=function(){spk=false;wIdx=wds.length;showWds();clrWT();};u.onerror=function(){spk=false;clrWT();};u.addEventListener("boundary",function(e){
+function startSpeak(text,phase,durMs){clrWT();wds=text.split(" ");wIdx=0;var phEl=document.getElementById("anim-phase-lbl");if(phEl)phEl.textContent=phase;showWds();var iv=Math.max(380,(durMs*1.25)/wds.length); /* slower fallback — boundary events lead */if(muted){var muteIv=Math.max(250,(durMs*0.92)/wds.length);wTmr=setInterval(function(){if(wIdx<wds.length){wIdx++;showWds();}else clrWT();},muteIv);return;}window.speechSynthesis.cancel();var u=new SpeechSynthesisUtterance(text);var v=window._selectedVoice||selV;if(v)u.voice=v;u.volume=.92;u.rate=.88;u.pitch=1.05;u.onstart=function(){spk=true;clrWT();wIdx=0;/* Start conservative timer — boundary events will override */var baseIv=Math.max(480,(durMs*1.1)/wds.length);wTmr=setInterval(function(){if(wIdx<wds.length){wIdx++;showWds();}else clrWT();},baseIv);};u.onend=function(){spk=false;wIdx=wds.length;showWds();clrWT();};u.onerror=function(){spk=false;clrWT();};u.addEventListener("boundary",function(e){
   if(e.name!=="word")return;
   var cc=0;
   for(var i=0;i<wds.length;i++){
