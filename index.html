@@ -621,13 +621,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 .s-stat{padding:16px;text-align:center;color:#fff}
 .s-stat .s-val{font-family:'Raleway',sans-serif;font-size:32px;font-weight:800;color:var(--teal2)}
 .s-stat .s-lbl{font-size:12px;color:rgba(255,255,255,.6);margin-top:2px}
-.cert-box{
-  background:linear-gradient(135deg,rgba(0,137,123,.08),rgba(33,150,243,.05));
-  border:2px solid rgba(0,137,123,.25);
-  border-radius:var(--radius);padding:24px;margin-bottom:24px;
-}
-.cert-box h3{font-family:'Raleway',sans-serif;font-size:20px;font-weight:700;color:var(--navy);margin-bottom:4px}
-.cert-box p{font-size:13px;color:var(--gray700)}
 
 /* ===== NURSING TIPS ===== */
 .tip-box{
@@ -811,6 +804,49 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 #visitor-badge:hover{transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,0,0,.4)}
 #visitor-badge .vb-icon{font-size:14px}
 #visitor-badge .vb-count{font-size:13px;font-weight:900;color:#00BCD4}
+#visitor-badge::after{
+  content:'';
+  position:absolute;inset:-3px;border-radius:14px;
+  border:2px solid transparent;
+  background:conic-gradient(#00BCD4 var(--hold-pct,0%), transparent var(--hold-pct,0%)) border-box;
+  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:destination-out;mask-composite:exclude;
+  opacity:0;transition:opacity .1s;pointer-events:none;
+}
+#visitor-badge.holding::after{opacity:1;}
+@keyframes holdProgress{from{--hold-pct:0%}to{--hold-pct:100%}}
+@property --hold-pct{syntax:'<percentage>';inherits:false;initial-value:0%}
+/* ── VISITOR POPUP ── */
+#visitor-popup{
+  position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.6);
+  backdrop-filter:blur(8px);
+  display:flex;align-items:center;justify-content:center;
+}
+#visitor-popup-box{
+  background:#0D1828;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:20px;
+  padding:40px 48px;
+  text-align:center;
+  position:relative;
+  min-width:240px;
+}
+#visitor-popup-close{
+  position:absolute;top:12px;right:14px;
+  background:none;border:none;
+  color:rgba(255,255,255,.4);
+  font-size:20px;cursor:pointer;
+}
+#visitor-popup-close:hover{color:#fff}
+.vp-icon{font-size:48px;margin-bottom:12px}
+.vp-count{
+  font-size:64px;font-weight:900;
+  color:#00BCD4;
+  font-family:'Raleway',sans-serif;
+  line-height:1;margin-bottom:8px;
+}
+.vp-label{font-size:14px;color:rgba(255,255,255,.5);font-weight:600}
 
 /* ── ANALYTICS MODAL ── */
 #analytics-modal{
@@ -878,13 +914,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 .lo-list li{font-size:12.5px;color:var(--gray600);display:flex;align-items:flex-start;gap:8px;line-height:1.5}
 .lo-list li::before{content:"✓";color:#1565C0;font-weight:900;font-size:11px;margin-top:2px;flex-shrink:0}
 
-/* Nav time + difficulty */
-.nav-meta{display:flex;align-items:center;gap:5px;margin-top:3px}
-.nav-time{font-size:10px;color:var(--gray500);font-weight:600}
-.nav-diff{font-size:9px;font-weight:800;padding:1px 6px;border-radius:50px}
-.diff-basic{background:rgba(0,191,165,.12);color:#00897B}
-.diff-intermediate{background:rgba(255,152,0,.12);color:#E65100}
-.diff-advanced{background:rgba(244,67,54,.1);color:#C62828}
 
 /* Passing score indicator */
 .pass-threshold{
@@ -917,31 +946,77 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 }
 .skip-link:focus{top:8px}
 
-/* Certificate professional upgrade */
-.cert-pro{
-  background:linear-gradient(135deg,#0A1828 0%,#0D2B4E 50%,#0A1828 100%);
-  border:2px solid rgba(255,215,0,.3);border-radius:16px;
-  padding:36px 32px;text-align:center;position:relative;overflow:hidden;
-  max-width:680px;margin:20px auto;box-shadow:0 8px 40px rgba(0,0,0,.4);
+/* ── REGISTRATION FORM ── */
+.reg-form-card{
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.14);
+  border-radius:14px;padding:24px 28px;
+  margin-bottom:28px;text-align:left;
 }
-.cert-pro::before{content:"";position:absolute;inset:6px;border:1px solid rgba(255,215,0,.12);border-radius:12px;pointer-events:none}
-.cert-emblem{font-size:52px;margin-bottom:4px}
-.cert-institution{font-size:11px;font-weight:800;letter-spacing:3px;color:rgba(255,215,0,.6);text-transform:uppercase;margin-bottom:16px}
-.cert-title{font-family:"Raleway",sans-serif;font-size:13px;font-weight:700;color:rgba(255,255,255,.6);margin-bottom:4px;letter-spacing:1px;text-transform:uppercase}
-.cert-module{font-family:"Raleway",sans-serif;font-size:22px;font-weight:900;color:#fff;margin-bottom:20px;line-height:1.3}
-.cert-awarded-to{font-size:11px;color:rgba(255,215,0,.5);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px}
-.cert-name{font-family:"Raleway",sans-serif;font-size:28px;font-weight:900;color:#FFD700;margin-bottom:20px}
-.cert-meta-row{display:flex;justify-content:center;gap:32px;margin:16px 0;flex-wrap:wrap}
-.cert-meta-item{text-align:center}
-.cert-meta-item .cm-val{font-size:14px;font-weight:900;color:#fff}
-.cert-meta-item .cm-label{font-size:10px;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
-.cert-divider{border:none;border-top:1px solid rgba(255,215,0,.2);margin:16px 0}
-.cert-sigline{display:flex;justify-content:space-around;margin-top:16px;gap:20px;flex-wrap:wrap}
-.cert-sig{text-align:center}
-.cert-sig-line{width:120px;border-top:1px solid rgba(255,255,255,.3);margin:0 auto 4px}
-.cert-sig-name{font-size:11px;font-weight:700;color:rgba(255,255,255,.7)}
-.cert-sig-title{font-size:9.5px;color:rgba(255,255,255,.4)}
-.cert-ref{position:absolute;bottom:10px;right:14px;font-size:9px;color:rgba(255,255,255,.2);font-family:monospace}
+.reg-form-card h3{
+  font-family:'Raleway',sans-serif;font-size:16px;font-weight:800;
+  color:#fff;margin-bottom:6px;
+}
+.reg-form-card p{font-size:12.5px;color:rgba(255,255,255,.55);margin-bottom:20px}
+.reg-field{margin-bottom:16px}
+.reg-field label{
+  display:block;font-size:12px;font-weight:700;
+  color:rgba(255,255,255,.7);margin-bottom:6px;letter-spacing:.3px;
+}
+.reg-field label .req{color:#FF6B6B;margin-left:2px}
+.reg-field label .opt{color:rgba(255,255,255,.4);font-weight:500;font-size:11px;margin-left:4px}
+.reg-field input{
+  width:100%;padding:10px 14px;
+  background:rgba(0,0,0,.25);
+  border:1.5px solid rgba(255,255,255,.15);
+  border-radius:9px;color:#fff;font-size:14px;
+  font-family:'Nunito',sans-serif;outline:none;
+  transition:border-color .2s;
+}
+.reg-field input::placeholder{color:rgba(255,255,255,.3)}
+.reg-field input:focus{border-color:var(--teal2)}
+.btn-start:disabled{
+  opacity:.45;cursor:not-allowed;
+  transform:none!important;box-shadow:none!important;
+}
+/* ── RESULT PAGE ── */
+.result-wrap{max-width:560px;margin:0 auto;text-align:center;padding:32px 20px}
+.result-emoji{font-size:64px;margin-bottom:16px;display:block;animation:completionPop .6s cubic-bezier(.34,1.56,.64,1) both}
+.result-title{font-family:'Raleway',sans-serif;font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--navy);margin-bottom:6px}
+.result-sub{font-size:15px;color:var(--gray700);margin-bottom:24px;line-height:1.5}
+.result-stats{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;
+  background:linear-gradient(135deg,var(--navy),#1a3a5e);
+  border-radius:var(--radius);padding:20px;margin-bottom:20px;
+}
+.result-stat .rv{font-family:'Raleway',sans-serif;font-size:28px;font-weight:800;color:var(--teal2)}
+.result-stat .rl{font-size:11px;color:rgba(255,255,255,.6);margin-top:2px}
+.result-bar-wrap{margin-bottom:16px}
+.result-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--gray500);margin-bottom:6px}
+.result-bar-outer{background:var(--gray100);border-radius:10px;height:10px;overflow:hidden}
+.result-bar-fill{height:100%;border-radius:10px;transition:width 1s ease}
+.result-pass-note{font-size:13px;color:var(--gray500);margin-bottom:20px}
+.result-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+/* ── FIREBASE ANALYTICS DASHBOARD ── */
+.adash-section{padding:0 20px 20px}
+.adash-section h3{color:#00BCD4;font-size:11px;font-weight:900;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.06)}
+.adash-bar-row{display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.adash-bar-row:last-child{border:none}
+.adash-bar-name{font-size:12px;color:rgba(255,255,255,.65);min-width:160px}
+.adash-bar-outer{flex:1;background:rgba(255,255,255,.06);border-radius:4px;height:8px;overflow:hidden}
+.adash-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#00897B,#00BCD4);transition:width .5s}
+.adash-bar-val{font-size:11px;font-weight:800;color:rgba(255,255,255,.7);min-width:28px;text-align:right}
+.adash-table{width:100%;border-collapse:collapse;font-size:12px}
+.adash-table th{color:rgba(255,255,255,.4);font-size:10px;letter-spacing:1px;text-transform:uppercase;padding:6px 10px;text-align:left;border-bottom:1px solid rgba(255,255,255,.06)}
+.adash-table td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04);color:rgba(255,255,255,.75)}
+.adash-table tr:hover td{background:rgba(255,255,255,.03)}
+.adash-passed{color:#00BFA5;font-weight:800}
+.adash-failed{color:#FF5252;font-weight:800}
+.adash-refresh{padding:6px 14px;background:rgba(0,191,165,.12);border:1px solid rgba(0,191,165,.3);color:#00BFA5;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.adash-export{padding:6px 14px;background:rgba(33,150,243,.12);border:1px solid rgba(33,150,243,.3);color:#29B6F6;border-radius:6px;font-size:11px;font-weight:700;cursor:pointer}
+.adash-spinner{text-align:center;padding:40px;color:rgba(255,255,255,.3);font-size:14px}
+.adash-device{display:flex;gap:20px;padding:12px 0;font-size:13px;color:rgba(255,255,255,.75)}
+.adash-device span{font-size:18px;margin-right:6px}
 
 /* Responsive basics */
 @media(max-width:768px){
@@ -959,22 +1034,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
   box-shadow:0 2px 12px rgba(0,0,0,.3);
 }
 
-@media print {
-  body.print-cert-mode * { visibility: hidden !important; }
-  body.print-cert-mode #cert-professional,
-  body.print-cert-mode #cert-professional * { visibility: visible !important; }
-  body.print-cert-mode #cert-professional {
-    position: fixed !important;
-    top: 0 !important; left: 0 !important;
-    width: 100vw !important; height: 100vh !important;
-    margin: 0 !important; padding: 40px !important;
-    z-index: 99999 !important;
-    display: flex !important;
-    flex-direction: column !important;
-    justify-content: center !important;
-    align-items: center !important;
-  }
-}
 
 /* ════════════ MOBILE RESPONSIVE ════════════ */
 :root { --sidebar:260px; }
@@ -1016,9 +1075,7 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 
   #visitor-badge { bottom:12px; left:12px; padding:6px 10px; font-size:10px; }
 
-  .cert-pro { padding:24px 16px !important; }
-  .cert-sigline { gap:10px; }
-  .cert-sig-line { width:90px; }
+
 
   .learning-objectives { padding:12px 14px; }
 
@@ -1029,8 +1086,6 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 @media (max-width:480px){
   #main { padding:14px 12px !important; }
   .page-header h1 { font-size:20px !important; }
-  .cert-meta-row { gap:16px; }
-  .cert-module { font-size:18px !important; }
 }
 
 /* Mobile menu button */
@@ -1175,7 +1230,23 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
       <div class="cover-stat"><div class="num">15</div><div class="lbl">Quiz Questions</div></div>
       <div class="cover-stat"><div class="num">🎓</div><div class="lbl">Certificate</div></div>
     </div>
-    <button class="btn-start" onclick="startCourse()">Start Learning →</button>
+    <div class="reg-form-card">
+      <h3>👤 Please introduce yourself</h3>
+      <p>Your information helps us personalise your learning experience.</p>
+      <div class="reg-field">
+        <label>Full Name<span class="req">*</span></label>
+        <input type="text" id="reg-name" placeholder="e.g. Aisha Al-Rashidi" oninput="onRegInput()" autocomplete="name">
+      </div>
+      <div class="reg-field">
+        <label>Job Title <span class="opt">(optional)</span></label>
+        <input type="text" id="reg-jobtitle" placeholder="e.g. Staff Nurse, ICU Nurse" autocomplete="organization-title">
+      </div>
+      <div class="reg-field">
+        <label>Department <span class="opt">(optional)</span></label>
+        <input type="text" id="reg-dept" placeholder="e.g. ICU, NICU, CCU" autocomplete="organization">
+      </div>
+    </div>
+    <button class="btn-start" id="btn-start-learn" onclick="startCourse()" disabled>Start Learning →</button>
   </div>
 </div>
 
@@ -2118,47 +2189,8 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 
     <!-- COMPLETE -->
     <div class="section" id="section-complete">
-      <div class="completion-wrap">
-        <div class="completion-icon">🏆</div>
-        <h2>Congratulations!</h2>
-        <p>You have successfully completed the eLearning module on <strong>Communication with Unconscious Patients</strong>.</p>
-        <div class="score-display" id="finalScore">
-          <div class="s-stat"><div class="s-val" id="finalPct">—</div><div class="s-lbl">Quiz Score</div></div>
-          <div class="s-stat"><div class="s-val" id="finalCorrect">—</div><div class="s-lbl">Correct Answers</div></div>
-          <div class="s-stat"><div class="s-val" id="finalPts">—</div><div class="s-lbl">Points Earned</div></div>
-        </div>
-        <div class="cert-pro" id="cert-professional">
-          <div class="cert-emblem">🏛️</div>
-          <div class="cert-institution">Faculty of Nursing · Capital University · Egypt</div>
-          <div class="cert-title">This is to certify that</div>
-          <div class="cert-awarded-to">Has successfully completed</div>
-          <div class="cert-module">Communication with Unconscious Patients<br><span style="font-size:14px;font-weight:600;color:rgba(255,255,255,.6)">ICU Nursing eLearning Module</span></div>
-          <hr class="cert-divider">
-          <div class="cert-meta-row">
-            <div class="cert-meta-item"><div class="cm-val" id="cert-score-val">—</div><div class="cm-label">Quiz Score</div></div>
-            <div class="cert-meta-item"><div class="cm-val" id="cert-pts-val">—</div><div class="cm-label">Points</div></div>
-            <div class="cert-meta-item"><div class="cm-val" id="cert-date-val">—</div><div class="cm-label">Completion Date</div></div>
-            <div class="cert-meta-item"><div class="cm-val">2</div><div class="cm-label">CME Topics</div></div>
-          </div>
-          <hr class="cert-divider">
-          <div class="cert-sigline">
-            <div class="cert-sig">
-              <div class="cert-sig-line"></div>
-              <div class="cert-sig-name">Dr. Zainab Hussein Ali</div>
-              <div class="cert-sig-title">Professor · Faculty of Nursing</div>
-            </div>
-            <div class="cert-sig">
-              <div class="cert-sig-line"></div>
-              <div class="cert-sig-name">Dr. Rasha Mohamed Elauoty</div>
-              <div class="cert-sig-title">Lecturer · Faculty of Nursing</div>
-            </div>
-          </div>
-          <div class="cert-ref" id="cert-ref-num">REF: —</div>
-        </div>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-          <button class="btn btn-secondary" onclick="showSection('quiz')">← Retake Quiz</button>
-          <button class="btn btn-primary" onclick="showSection('intro')">🔄 Restart Course</button>
-        </div>
+      <div class="result-wrap" id="result-wrap">
+        <!-- filled by finishQuiz() -->
       </div>
     </div>
 
@@ -2247,8 +2279,44 @@ const locData=[
   {name:"Coma",desc:"Unarousable unresponsiveness; eyes remain closed with no interaction with the environment. No purposeful response to stimulation."}
 ];
 
+// ===== USER REGISTRATION =====
+let currentUser = {name:'', jobTitle:'', department:''};
+
+function onRegInput(){
+  const name = document.getElementById('reg-name').value.trim();
+  const btn = document.getElementById('btn-start-learn');
+  if(btn) btn.disabled = name.length === 0;
+}
+
+// Pre-fill from sessionStorage if same session
+(function(){
+  const saved = sessionStorage.getItem('icu_user');
+  if(saved){
+    try{
+      const u = JSON.parse(saved);
+      currentUser = u;
+      const ni = document.getElementById('reg-name');
+      const ji = document.getElementById('reg-jobtitle');
+      const di = document.getElementById('reg-dept');
+      if(ni){ ni.value = u.name||''; }
+      if(ji){ ji.value = u.jobTitle||''; }
+      if(di){ di.value = u.department||''; }
+      if(u.name){ const btn=document.getElementById('btn-start-learn'); if(btn) btn.disabled=false; }
+    }catch(e){}
+  }
+})();
+
 // ===== START COURSE =====
 function startCourse(){
+  const name = (document.getElementById('reg-name')||{value:''}).value.trim();
+  if(!name){ document.getElementById('reg-name').focus(); return; }
+  currentUser = {
+    name: name,
+    jobTitle: (document.getElementById('reg-jobtitle')||{value:''}).value.trim(),
+    department: (document.getElementById('reg-dept')||{value:''}).value.trim()
+  };
+  sessionStorage.setItem('icu_user', JSON.stringify(currentUser));
+
   document.getElementById('cover').style.transition='opacity .5s ease';
   document.getElementById('cover').style.opacity='0';
   setTimeout(()=>{
@@ -2257,6 +2325,21 @@ function startCourse(){
   },500);
   markVisited('intro');
   updateProgress();
+
+  // Firebase EVENT A
+  try{
+    if(window.db){
+      db.ref('analytics/visits/total').transaction(v=>(v||0)+1);
+      db.ref('analytics/visits/sessions').push({
+        name: currentUser.name,
+        jobTitle: currentUser.jobTitle||'—',
+        department: currentUser.department||'—',
+        device: /Mobile|Android|iPhone|iPad/.test(navigator.userAgent)?'mobile':'desktop',
+        date: new Date().toLocaleDateString('en-GB'),
+        timestamp: Date.now()
+      });
+    }
+  }catch(e){}
 }
 
 // ===== SIDEBAR =====
@@ -2277,9 +2360,10 @@ function showSection(id){
   window.scrollTo({top:56,behavior:'smooth'});
   markVisited(id);
   updateProgress();
-  // Close sidebar on mobile
   document.getElementById('sidebar').classList.remove('open');
   document.getElementById('overlay').classList.remove('show');
+  // Firebase EVENT B
+  try{ if(window.db) db.ref('analytics/sections/'+id).transaction(v=>(v||0)+1); }catch(e){}
 }
 
 function markVisited(id){
@@ -2407,10 +2491,94 @@ function finishQuiz(){
   markVisited('complete');
   updateProgress();
   const pct=Math.round((score/questions.length)*100);
-  document.getElementById('finalPct').textContent=pct+'%';
-  document.getElementById('finalCorrect').textContent=`${score}/${questions.length}`;
-  document.getElementById('finalPts').textContent=totalPoints;
+  const passed=pct>=60;
+  const userName=currentUser.name||'Learner';
+
+  // Build result page HTML
+  const wrap=document.getElementById('result-wrap');
+  if(wrap){
+    if(passed){
+      wrap.innerHTML=`
+        <span class="result-emoji">✅</span>
+        <div class="result-title">Well Done, ${userName}!</div>
+        <div class="result-sub">You passed the assessment</div>
+        <div class="result-stats">
+          <div class="result-stat"><div class="rv">${pct}%</div><div class="rl">Score</div></div>
+          <div class="result-stat"><div class="rv">${score}/${questions.length}</div><div class="rl">Correct</div></div>
+          <div class="result-stat"><div class="rv">+${totalPoints}</div><div class="rl">Points</div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span>Your Score</span><span>${pct}%</span></div>
+          <div class="result-bar-outer"><div class="result-bar-fill" id="result-bar" style="width:0%;background:linear-gradient(90deg,#00897B,#00BFA5)"></div></div>
+        </div>
+        <div class="result-actions">
+          <button class="btn btn-secondary" onclick="showReviewMode()">📋 Review Answers</button>
+          <button class="btn btn-primary" onclick="location.reload()">🔄 Restart</button>
+        </div>`;
+    } else {
+      const passing=Math.ceil(questions.length*0.6);
+      wrap.innerHTML=`
+        <span class="result-emoji">📚</span>
+        <div class="result-title">Keep Going, ${userName}!</div>
+        <div class="result-sub">Review the material and retry</div>
+        <div class="result-stats">
+          <div class="result-stat"><div class="rv">${pct}%</div><div class="rl">Score</div></div>
+          <div class="result-stat"><div class="rv">${score}/${questions.length}</div><div class="rl">Correct</div></div>
+        </div>
+        <div class="result-bar-wrap">
+          <div class="result-bar-label"><span>Your Score</span><span>${pct}%</span></div>
+          <div class="result-bar-outer"><div class="result-bar-fill" id="result-bar" style="width:0%;background:linear-gradient(90deg,#FF6F00,#FFA000)"></div></div>
+        </div>
+        <div class="result-pass-note">Passing score: ${passing}/${questions.length} (60%)</div>
+        <div class="result-actions">
+          <button class="btn btn-secondary" onclick="showSection('intro')">📖 Review Course</button>
+          <button class="btn btn-primary" onclick="retakeQuiz()">✏️ Retake Quiz</button>
+        </div>`;
+    }
+    setTimeout(()=>{
+      const bar=document.getElementById('result-bar');
+      if(bar) bar.style.width=pct+'%';
+    },100);
+  }
+
   showSection('complete');
+
+  // Firebase EVENT C
+  try{
+    if(window.db){
+      db.ref('quiz_results').push({
+        name: currentUser.name,
+        jobTitle: currentUser.jobTitle||'—',
+        department: currentUser.department||'—',
+        score_pct: pct,
+        correct: score,
+        total: questions.length,
+        passed: passed,
+        date: new Date().toLocaleDateString('en-GB'),
+        timestamp: Date.now()
+      });
+    }
+  }catch(e){}
+}
+
+function retakeQuiz(){
+  quizFinished=false;
+  score=0;totalPoints=0;currentQ=0;quizStarted=false;
+  quizAnswers=new Array(questions.length).fill(null);
+  document.getElementById('scoreBadge').textContent='⭐ 0 pts';
+  document.getElementById('qProgress').style.width='0%';
+  document.getElementById('qNum').textContent='Question 1 of '+questions.length;
+  document.getElementById('qText').textContent='';
+  document.getElementById('qOpts').innerHTML='';
+  document.getElementById('qFeedback').className='quiz-feedback';
+  document.getElementById('qNext').style.display='none';
+  document.getElementById('qFinish').style.display='none';
+  document.getElementById('qStart').style.display='block';
+  showSection('quiz');
+}
+
+function showReviewMode(){
+  showSection('quiz');
 }
 
 // iOS Safari touch fix for Start Learning button
@@ -2927,55 +3095,15 @@ setTimeout(loadV,600);
 <div id="analytics-modal">
   <div id="analytics-wrap">
     <div id="analytics-header">
-      <div class="analytics-title">📊 Module Analytics Dashboard</div>
-      <button id="analytics-close" onclick="closeAnalytics()">✕</button>
-    </div>
-
-    <!-- Key Stats Row -->
-    <div class="analytics-grid">
-      <div class="stat-card">
-        <div class="stat-icon">👥</div>
-        <div class="stat-val" id="an-visitors">—</div>
-        <div class="stat-label">Total Visitors</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">📚</div>
-        <div class="stat-val" id="an-sections">0/12</div>
-        <div class="stat-label">Sections Completed</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🏆</div>
-        <div class="stat-val" id="an-best-score">—</div>
-        <div class="stat-label">Best Quiz Score</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⭐</div>
-        <div class="stat-val" id="an-points">0</div>
-        <div class="stat-label">Points Earned</div>
+      <div class="analytics-title">📊 Module Analytics — ICU Nursing</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <button class="adash-refresh" onclick="loadDashboard()">↻ Refresh</button>
+        <button id="analytics-close" onclick="closeAnalytics()">✕</button>
       </div>
     </div>
 
-    <!-- Quiz Scores History -->
-    <div class="analytics-section">
-      <h3>📝 Quiz Attempts History</h3>
-      <div id="an-scores-list"><p style="color:rgba(255,255,255,.3);font-size:12px">No quiz attempts recorded yet.</p></div>
-    </div>
-
-    <!-- Section Progress -->
-    <div class="analytics-section">
-      <h3>📖 Section Visit Progress</h3>
-      <div id="an-sections-list"></div>
-    </div>
-
-    <!-- Animation Usage -->
-    <div class="analytics-section">
-      <h3>🎬 Animation Interactions</h3>
-      <div id="an-anim-list" style="display:flex;gap:10px;flex-wrap:wrap"></div>
-    </div>
-
-    <div class="analytics-footer">
-      <span id="an-last-visit">Last visit: —</span>
-      <button id="clear-analytics-btn" onclick="clearAnalytics()">🗑 Clear My Data</button>
+    <div id="adash-body">
+      <div class="adash-spinner">⏳ Loading analytics…</div>
     </div>
   </div>
 </div>
@@ -2983,199 +3111,286 @@ setTimeout(loadV,600);
 
 <script>
 // ══════════════════════════════════════════════════
-//  ANALYTICS ENGINE
+//  ANALYTICS ENGINE — Firebase + Password Protected
 // ══════════════════════════════════════════════════
 (function(){
 
-var STORE_KEY = 'icu_elearn_analytics';
-var VISIT_KEY = 'icu_elearn_visit_count';
+var ADMIN_PASSWORD = 'Amnah2026';
+var holdTimer = null;
+var dashAutoRefresh = null;
 
-// ── Load / Save ──
-function load(){
-  try{return JSON.parse(localStorage.getItem(STORE_KEY)||'null')||{
-    visitCount:0, sections:[], quizScores:[], totalPoints:0,
-    animPlays:{before:0,during:0,after:0}, firstVisit:null, lastVisit:null
-  }}catch(e){return{visitCount:0,sections:[],quizScores:[],totalPoints:0,animPlays:{before:0,during:0,after:0},firstVisit:null,lastVisit:null}}
-}
-function save(d){try{localStorage.setItem(STORE_KEY,JSON.stringify(d))}catch(e){}}
-
-// ── Global visitor counter (CountAPI) ──
-function fetchGlobalCount(){
-  var ns='icu-nursing-elearning-dallah-2026';
-  var key='visitors';
-  fetch('https://api.counterapi.dev/v1/'+ns+'/'+key+'/up')
-    .then(function(r){return r.json()})
-    .then(function(d){
-      var cnt = d.count||d.value||'?';
-      document.getElementById('vb-num').textContent = cnt;
-      document.getElementById('an-visitors').textContent = cnt;
-    })
-    .catch(function(){
-      // fallback: local count
-      var data=load();
-      document.getElementById('vb-num').textContent = data.visitCount||1;
-      document.getElementById('an-visitors').textContent = data.visitCount||1;
-    });
-}
-
-// ── Record this visit ──
-var data = load();
-data.visitCount = (data.visitCount||0)+1;
-if(!data.firstVisit) data.firstVisit = new Date().toISOString();
-data.lastVisit = new Date().toISOString();
-save(data);
-
-// ── Hook: track section visits ──
-var _origShow = window.showSection;
-window.showSection = function(sec){
-  if(_origShow) _origShow(sec);
-  var d=load();
-  if(!d.sections) d.sections=[];
-  if(!d.sections.includes(sec)) d.sections.push(sec);
-  save(d);
-};
-
-// ── Hook: track animation plays ──
-var _origOpenAnim = window.openAnim;
-window.openAnim = function(phase){
-  if(_origOpenAnim) _origOpenAnim(phase);
-  var d=load();
-  if(!d.animPlays) d.animPlays={before:0,during:0,after:0};
-  d.animPlays[phase] = (d.animPlays[phase]||0)+1;
-  save(d);
-};
-
-// ── Hook: track quiz completion ──
-// We patch the quiz submit to record the score
-var _origFinish = window.finishQuiz;
-window.finishQuiz = function(){
-  if(_origFinish) _origFinish();
-  // Score is in the DOM after finishQuiz runs
-  setTimeout(function(){
-    var pctEl = document.getElementById('finalPct');
-    var ptsEl = document.getElementById('finalPts');
-    if(pctEl){
-      var d=load();
-      if(!d.quizScores) d.quizScores=[];
-      d.quizScores.push({
-        date: new Date().toLocaleString('en-GB'),
-        pct: parseInt(pctEl.textContent)||0,
-        pts: parseInt(ptsEl?ptsEl.textContent:0)||0
-      });
-      d.totalPoints = (d.totalPoints||0) + (parseInt(ptsEl?ptsEl.textContent:0)||0);
-      save(d);
-      // Update points in analytics
-      document.getElementById('an-points').textContent = d.totalPoints;
-    }
-  },300);
-};
-
-// Also try hooking by watching for score change
-var scoreBadgeEl = document.getElementById('scoreBadge');
-if(scoreBadgeEl){
-  var _scoreObs = new MutationObserver(function(){
-    var d=load();
-    var pts = parseInt(scoreBadgeEl.textContent.replace(/[^0-9]/g,''))||0;
-    d.totalPoints = Math.max(d.totalPoints||0, pts);
-    save(d);
-    document.getElementById('an-points').textContent = d.totalPoints;
-  });
-  _scoreObs.observe(scoreBadgeEl,{childList:true,characterData:true,subtree:true});
-}
-
-// ── Section name map ──
 var SEC_NAMES = {
-  intro:'📖 Introduction', anatomy:'🧠 Anatomy & Physiology',
-  unconscious:'😴 Unconsciousness', gcs:'📊 Levels of Consciousness',
-  importance:'💬 Why Communicate?', techniques:'🤝 Communication Techniques',
-  barriers:'🚧 Barriers', phases:'⏱️ Phases of Communication',
-  ethics:'⚖️ Ethical & Psychological', daily:'📋 Daily Nursing Care',
-  quiz:'📝 Knowledge Check', complete:'🎓 Certificate'
+  intro:'Introduction', anatomy:'Anatomy & Physiology',
+  unconscious:'Unconsciousness', gcs:'Levels of Consciousness',
+  importance:'Why Communicate?', techniques:'Communication Techniques',
+  barriers:'Barriers', phases:'Phases of Communication',
+  ethics:'Ethical & Psychological', daily:'Daily Nursing Care',
+  quiz:'Knowledge Check', complete:'Completion Page'
 };
 
-// ── Open/Close modal ──
-window.openAnalytics = function(){
-  var d=load();
-  fetchGlobalCount();
+// ── Admin detection via URL hash ──
+window._isAdmin = (window.location.hash === '#admin');
+if(window._isAdmin){ history.replaceState(null,'',window.location.pathname); }
 
-  // Sections
-  document.getElementById('an-sections').textContent = d.sections.length+'/12';
-  var sl = document.getElementById('an-sections-list');
-  sl.innerHTML = '';
-  Object.keys(SEC_NAMES).forEach(function(k){
-    var done = d.sections.includes(k);
-    var row = document.createElement('div');
-    row.className='section-progress-row';
-    row.innerHTML='<span class="sp-name">'+SEC_NAMES[k]+'</span>'
-      +'<span class="sp-badge '+(done?'sp-done':'sp-todo')+'">'+(done?'✓ Visited':'Not yet')+'</span>';
-    sl.appendChild(row);
-  });
-
-  // Quiz scores
-  var best = 0;
-  var qlist = document.getElementById('an-scores-list');
-  if(d.quizScores && d.quizScores.length){
-    qlist.innerHTML='';
-    d.quizScores.forEach(function(s){
-      if(s.pct>best)best=s.pct;
-      var row=document.createElement('div');row.className='score-row';
-      var color=s.pct>=80?'#00BFA5':s.pct>=60?'#FFB300':'#FF5252';
-      row.innerHTML='<span class="score-date">'+s.date+'</span>'
-        +'<div class="score-bar-wrap"><div class="score-bar-fill" style="width:'+s.pct+'%;background:'+color+'"></div></div>'
-        +'<span class="score-pct" style="color:'+color+'">'+s.pct+'%</span>'
-        +'<span style="color:#FFD700;font-size:11px;min-width:50px;text-align:right">+'+s.pts+' pts</span>';
-      qlist.appendChild(row);
-    });
-    document.getElementById('an-best-score').textContent = best+'%';
-  } else {
-    document.getElementById('an-best-score').textContent = '—';
-    qlist.innerHTML='<p style="color:rgba(255,255,255,.3);font-size:12px">No quiz attempts yet.</p>';
+// ── Visitor popup (shown to non-admin) ──
+function showVisitorPopup(){
+  var existing = document.getElementById('visitor-popup');
+  if(existing) existing.remove();
+  var popup = document.createElement('div');
+  popup.id = 'visitor-popup';
+  popup.innerHTML =
+    '<div id="visitor-popup-box">'
+    +'<button id="visitor-popup-close" onclick="document.getElementById(\'visitor-popup\').remove()">×</button>'
+    +'<div class="vp-icon">👥</div>'
+    +'<div class="vp-count" id="vp-count-num">…</div>'
+    +'<div class="vp-label">people visited this module</div>'
+    +'</div>';
+  popup.addEventListener('click',function(e){ if(e.target===popup) popup.remove(); });
+  document.body.appendChild(popup);
+  try{
+    if(window.db){
+      db.ref('analytics/visits/total').once('value').then(function(s){
+        var el=document.getElementById('vp-count-num');
+        if(el) el.textContent=s.val()||'—';
+      }).catch(function(){
+        var el=document.getElementById('vp-count-num');
+        if(el) el.textContent='—';
+      });
+    } else {
+      var el=document.getElementById('vp-count-num');
+      if(el) el.textContent='—';
+    }
+  }catch(e){
+    var el2=document.getElementById('vp-count-num');
+    if(el2) el2.textContent='—';
   }
+}
 
-  // Points
-  document.getElementById('an-points').textContent = d.totalPoints||0;
+// ── Badge action: admin → dashboard, public → popup ──
+function badgeAction(){
+  if(window._isAdmin){ openAnalytics(); }
+  else { showVisitorPopup(); }
+}
 
-  // Animation plays
-  var al = document.getElementById('an-anim-list');
-  al.innerHTML='';
-  var phases=[['before','📋','#1565C0'],['during','⚡','#00695C'],['after','✅','#7B1FA2']];
-  phases.forEach(function(p){
-    var cnt=(d.animPlays&&d.animPlays[p[0]])||0;
-    var pill=document.createElement('div');
-    pill.style.cssText='background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 16px;text-align:center;min-width:120px';
-    pill.innerHTML='<div style="font-size:20px;margin-bottom:4px">'+p[1]+'</div>'
-      +'<div style="color:#fff;font-weight:800;font-size:16px">'+cnt+'</div>'
-      +'<div style="color:rgba(255,255,255,.4);font-size:11px">'+p[0][0].toUpperCase()+p[0].slice(1)+' plays</div>';
-    al.appendChild(pill);
-  });
-
-  // Last visit
-  if(d.lastVisit){
-    document.getElementById('an-last-visit').textContent='Last visit: '+new Date(d.lastVisit).toLocaleString('en-GB');
+// ── Visitor badge: long press (2 s) ──
+var badge = document.getElementById('visitor-badge');
+if(badge){
+  function startHold(){
+    badge.classList.add('holding');
+    badge.style.setProperty('--hold-pct','0%');
+    badge.style.animation='holdProgress 2s linear forwards';
+    holdTimer = setTimeout(function(){
+      cancelHold();
+      badgeAction();
+    }, 2000);
   }
-
-  document.getElementById('analytics-modal').classList.add('open');
-};
-window.closeAnalytics = function(){
-  document.getElementById('analytics-modal').classList.remove('open');
-};
-window.clearAnalytics = function(){
-  if(confirm('Clear all your analytics data for this module?')){
-    localStorage.removeItem(STORE_KEY);
-    closeAnalytics();
+  function cancelHold(){
+    clearTimeout(holdTimer);
+    badge.classList.remove('holding');
+    badge.style.animation='none';
+    badge.style.setProperty('--hold-pct','0%');
   }
-};
+  badge.addEventListener('pointerdown', startHold);
+  badge.addEventListener('pointerup',   cancelHold);
+  badge.addEventListener('pointerleave',cancelHold);
+  badge.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+}
 
-// ── Init: load counter on page load ──
-document.addEventListener('DOMContentLoaded',function(){
-  fetchGlobalCount();
-  var d=load();
-  document.getElementById('an-points').textContent = d.totalPoints||0;
+// ── Keyboard shortcut Ctrl+Shift+A ──
+document.addEventListener('keydown',function(e){
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){ e.preventDefault(); promptDashboard(); }
 });
 
-// Keyboard shortcut: Ctrl+Shift+A = open analytics
-document.addEventListener('keydown',function(e){
-  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();openAnalytics()}
+function promptDashboard(){
+  if(window._isAdmin){ openAnalytics(); return; }
+  var pw = window.prompt('Enter admin password:');
+  if(pw===null) return;
+  if(pw===ADMIN_PASSWORD){ openAnalytics(); }
+  else { alert('Incorrect password'); }
+}
+
+window.openAnalytics = function(){
+  document.getElementById('analytics-modal').classList.add('open');
+  loadDashboard();
+  clearInterval(dashAutoRefresh);
+  dashAutoRefresh = setInterval(loadDashboard, 60000);
+};
+
+window.closeAnalytics = function(){
+  document.getElementById('analytics-modal').classList.remove('open');
+  clearInterval(dashAutoRefresh);
+};
+
+window.loadDashboard = function(){
+  if(!window.db){
+    document.getElementById('adash-body').innerHTML='<div class="adash-spinner" style="color:#FF5252">⚠️ Unable to connect to database</div>';
+    return;
+  }
+  document.getElementById('adash-body').innerHTML='<div class="adash-spinner">⏳ Loading analytics…</div>';
+
+  Promise.all([
+    db.ref('analytics/visits/total').once('value'),
+    db.ref('quiz_results').once('value'),
+    db.ref('analytics/sections').once('value'),
+    db.ref('analytics/visits/sessions').once('value')
+  ]).then(function(snaps){
+    var totalVisits = snaps[0].val()||0;
+    var quizSnap = snaps[1];
+    var secSnap = snaps[2];
+    var sessSnap = snaps[3];
+
+    // Quiz data
+    var quizResults=[], totalScore=0, passCount=0;
+    quizSnap.forEach(function(c){ quizResults.push(Object.assign({_key:c.key},c.val())); });
+    quizResults.forEach(function(r){ totalScore+=r.score_pct||0; if(r.passed)passCount++; });
+    var quizCount=quizResults.length;
+    var avgScore=quizCount?Math.round(totalScore/quizCount):0;
+    var passRate=quizCount?Math.round(passCount/quizCount*100):0;
+
+    // Section visits
+    var secData={};
+    if(secSnap.val()) secData=secSnap.val();
+
+    // Sessions / device
+    var mobile=0, desktop=0;
+    sessSnap.forEach(function(c){ var v=c.val(); if(v.device==='mobile')mobile++; else desktop++; });
+    var sessTotal=mobile+desktop;
+
+    // Score distribution
+    var dist={'90-100':0,'80-89':0,'70-79':0,'60-69':0,'<60':0};
+    quizResults.forEach(function(r){
+      var p=r.score_pct||0;
+      if(p>=90)dist['90-100']++;
+      else if(p>=80)dist['80-89']++;
+      else if(p>=70)dist['70-79']++;
+      else if(p>=60)dist['60-69']++;
+      else dist['<60']++;
+    });
+    var maxDist=Math.max(1,...Object.values(dist));
+
+    // Recent participants (last 20, newest first)
+    var sorted=quizResults.slice().sort(function(a,b){return (b.timestamp||0)-(a.timestamp||0);}).slice(0,20);
+
+    // Top 10 sections
+    var secArr=Object.entries(secData).map(function(e){return{k:e[0],v:e[1]};});
+    secArr.sort(function(a,b){return b.v-a.v;});
+    secArr=secArr.slice(0,10);
+    var maxSec=secArr.length?secArr[0].v:1;
+
+    // Build HTML
+    var html='';
+
+    // Section A — Overview
+    html+='<div class="analytics-grid" style="padding:20px">'
+      +card('👥','Total Visits',totalVisits)
+      +card('📝','Quiz Attempts',quizCount)
+      +card('📊','Average Score',avgScore+'%')
+      +card('✅','Pass Rate',passRate+'%')
+      +'</div>';
+
+    // Section B — Score Distribution
+    html+='<div class="adash-section"><h3>Score Distribution</h3>';
+    var distRows=[
+      {label:'90–100%',key:'90-100',col:'#00BFA5',pass:true},
+      {label:'80–89%', key:'80-89', col:'#26C6DA',pass:true},
+      {label:'70–79%', key:'70-79', col:'#66BB6A',pass:true},
+      {label:'60–69%', key:'60-69', col:'#FFA726',pass:true},
+      {label:'< 60%',  key:'<60',   col:'#EF5350',pass:false}
+    ];
+    distRows.forEach(function(d){
+      var cnt=dist[d.key];
+      var w=Math.round(cnt/maxDist*100);
+      html+='<div class="adash-bar-row">'
+        +'<div class="adash-bar-name">'+d.label+(d.pass?' ✓':' ✗')+'</div>'
+        +'<div class="adash-bar-outer"><div class="adash-bar-fill" style="width:'+w+'%;background:'+d.col+'"></div></div>'
+        +'<div class="adash-bar-val">'+cnt+'</div>'
+        +'</div>';
+    });
+    html+='</div>';
+
+    // Section C — Section Visits
+    html+='<div class="adash-section"><h3>Section Visits (Top 10)</h3>';
+    if(secArr.length){
+      secArr.forEach(function(s){
+        var w=Math.round(s.v/maxSec*100);
+        var name=SEC_NAMES[s.k]||s.k;
+        html+='<div class="adash-bar-row">'
+          +'<div class="adash-bar-name">'+name+'</div>'
+          +'<div class="adash-bar-outer"><div class="adash-bar-fill" style="width:'+w+'%"></div></div>'
+          +'<div class="adash-bar-val">'+s.v+'</div>'
+          +'</div>';
+      });
+    } else { html+='<p style="color:rgba(255,255,255,.3);font-size:12px">No section data yet.</p>'; }
+    html+='</div>';
+
+    // Section D — Participants table
+    html+='<div class="adash-section"><h3>Participants <button class="adash-export" onclick="exportCSV()" style="margin-left:10px">⬇ Export CSV</button></h3>';
+    if(sorted.length){
+      html+='<div style="overflow-x:auto"><table class="adash-table"><thead><tr>'
+        +'<th>Name</th><th>Job Title</th><th>Department</th><th>Score</th><th>Result</th><th>Date</th>'
+        +'</tr></thead><tbody>';
+      sorted.forEach(function(r){
+        var res=r.passed
+          ?'<span class="adash-passed">✅ PASSED</span>'
+          :'<span class="adash-failed">❌ FAILED</span>';
+        html+='<tr><td>'+esc(r.name||'—')+'</td><td>'+esc(r.jobTitle||'—')+'</td>'
+          +'<td>'+esc(r.department||'—')+'</td><td>'+(r.score_pct||0)+'%</td>'
+          +'<td>'+res+'</td><td>'+(r.date||'—')+'</td></tr>';
+      });
+      html+='</tbody></table></div>';
+    } else { html+='<p style="color:rgba(255,255,255,.3);font-size:12px">No quiz results yet.</p>'; }
+    html+='</div>';
+
+    // Section E — Device split
+    html+='<div class="adash-section"><h3>Device Split</h3>';
+    html+='<div class="adash-device">'
+      +'<span>📱</span>Mobile: <strong>'+mobile+'</strong>'+(sessTotal?' ('+Math.round(mobile/sessTotal*100)+'%)':'')
+      +'&nbsp;&nbsp;&nbsp;<span>💻</span>Desktop: <strong>'+desktop+'</strong>'+(sessTotal?' ('+Math.round(desktop/sessTotal*100)+'%)':'')
+      +'</div></div>';
+
+    // Footer
+    html+='<div class="analytics-footer"><span style="color:rgba(255,255,255,.3);font-size:11px">Auto-refreshes every 60s</span></div>';
+
+    document.getElementById('adash-body').innerHTML=html;
+
+    // Stash data for CSV
+    window._dashQuizResults=quizResults;
+
+  }).catch(function(err){
+    document.getElementById('adash-body').innerHTML='<div class="adash-spinner" style="color:#FF5252">⚠️ Unable to connect to database</div>';
+  });
+};
+
+function card(ico,lbl,val){
+  return '<div class="stat-card"><div class="stat-icon">'+ico+'</div>'
+    +'<div class="stat-val">'+val+'</div><div class="stat-label">'+lbl+'</div></div>';
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+window.exportCSV = function(){
+  var rows=window._dashQuizResults||[];
+  var csv='Name,Job Title,Department,Score %,Correct,Total,Passed,Date\n';
+  rows.forEach(function(r){
+    csv+='"'+(r.name||'')+'","'+(r.jobTitle||'')+'","'+(r.department||'')+'",'+
+      (r.score_pct||0)+','+( r.correct||0)+','+(r.total||0)+','+(r.passed?'Yes':'No')+',"'+(r.date||'')+'"\n';
+  });
+  var a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='icu_quiz_results.csv';
+  a.click();
+};
+
+// Keep visitor badge count up to date via Firebase visits/total
+document.addEventListener('DOMContentLoaded',function(){
+  if(window.db){
+    try{
+      db.ref('analytics/visits/total').once('value').then(function(s){
+        var n=s.val()||0;
+        var el=document.getElementById('vb-num');
+        if(el) el.textContent=n;
+      });
+    }catch(e){}
+  }
 });
 
 })();
@@ -3228,79 +3443,7 @@ function injectObjectives(){
   });
 }
 
-// ── 2. NAV METADATA (time + difficulty) ──
-function injectNavMeta(){
-  Object.keys(OBJECTIVES).forEach(function(sec){
-    var navEl = document.getElementById('nav-'+sec);
-    if(!navEl) return;
-    var obj = OBJECTIVES[sec];
-    if(navEl.querySelector('.nav-meta')) return;
-    var diffClass = 'diff-'+obj.diff;
-    var diffLabel = obj.diff.charAt(0).toUpperCase()+obj.diff.slice(1);
-    var meta = '<div class="nav-meta">'
-      + '<span class="nav-time">⏱ '+obj.time+'</span>'
-      + '<span class="nav-diff '+diffClass+'">'+diffLabel+'</span>'
-      + '</div>';
-    navEl.insertAdjacentHTML('beforeend', meta);
-  });
-}
-
-// ── 3. QUIZ: SHUFFLE + REVIEW MODE + PASS/FAIL ──
-var quizShuffled = false;
-// quizAnswers already declared in quiz script
-
-// Patch the existing quiz answer handler to record answers
-var _origCheckQ = window.checkAnswer;
-window.checkAnswer = function(idx){
-  if(_origCheckQ) _origCheckQ(idx);
-  // Record the answer after a tick
-  setTimeout(function(){
-    var qEl = document.getElementById('qFeedback');
-    // best we can do without rewriting - track via DOM
-    var isCorrect = qEl && qEl.textContent.includes('✅');
-    quizAnswers.push({picked: idx, correct: isCorrect});
-  }, 50);
-};
-
-// Patch finishQuiz to add pass/fail feedback + review
-var _origFinish2 = window.finishQuiz;
-window.finishQuiz = function(){
-  if(_origFinish2) _origFinish2();
-  setTimeout(function(){
-    var pctEl = document.getElementById('finalPct');
-    if(!pctEl) return;
-    var pct = parseInt(pctEl.textContent)||0;
-    var passed = pct >= 60;
-
-    // Update pass/fail indicator in complete section
-    var scoreDisplay = document.getElementById('finalScore');
-    if(scoreDisplay){
-      var indicator = document.createElement('div');
-      indicator.style.cssText = 'text-align:center;padding:14px 0 4px;font-size:15px;font-weight:800;';
-      if(passed){
-        indicator.innerHTML = '<span style="color:#00BFA5;font-size:24px">✅</span> <span style="color:#00BFA5">PASSED</span> — Certificate Awarded';
-      } else {
-        indicator.innerHTML = '<span style="color:#FF5252;font-size:24px">❌</span> <span style="color:#FF5252">NOT PASSED</span> — Score below 60%'
-          + '<br><span style="font-size:12px;color:#888;font-weight:600">Review the material and retake the quiz</span>';
-      }
-      scoreDisplay.appendChild(indicator);
-    }
-
-    // Fill certificate dynamic fields
-    document.getElementById('cert-score-val').textContent  = pct + '%';
-    document.getElementById('cert-pts-val').textContent    = (document.getElementById('finalPts')||{textContent:'0'}).textContent;
-    document.getElementById('cert-date-val').textContent   = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
-    // Unique reference
-    var refNum = 'ICU-'+new Date().getFullYear()+'-'+String(Date.now()).slice(-6);
-    var refEl = document.getElementById('cert-ref-num');
-    if(refEl) refEl.textContent = 'REF: ' + refNum;
-
-    // Show/hide certificate based on pass
-    var certEl = document.getElementById('cert-professional');
-    if(certEl) certEl.style.display = passed ? 'block' : 'none';
-
-  }, 400);
-};
+// ── 2. NAV METADATA — removed (Task 4) ──
 
 // ── 4. ACCESSIBILITY ──
 function injectARIA(){
@@ -3353,37 +3496,10 @@ document.addEventListener('click', function(e){
   }
 });
 
-// ── 6. PRINT / SAVE CERTIFICATE ──
-window.printCertificate = function(){
-  var certEl = document.getElementById('cert-professional');
-  if(!certEl || certEl.style.display==='none'){
-    alert('Please complete the quiz and achieve a passing score (60%) first.');
-    return;
-  }
-  // Add print-only class to show only certificate
-  document.body.classList.add('print-cert-mode');
-  window.print();
-  setTimeout(function(){ document.body.classList.remove('print-cert-mode'); }, 500);
-};
-
 // ── INIT ──
 document.addEventListener('DOMContentLoaded', function(){
   injectObjectives();
-  injectNavMeta();
   injectARIA();
-
-  // Add Print Certificate button
-  var certSection = document.getElementById('section-complete');
-  if(certSection){
-    var btnWrap = certSection.querySelector('[style*="gap:12px"]');
-    if(btnWrap){
-      var printBtn = document.createElement('button');
-      printBtn.className = 'btn btn-primary';
-      printBtn.innerHTML = '🖨️ Save / Print Certificate';
-      printBtn.onclick = window.printCertificate;
-      btnWrap.appendChild(printBtn);
-    }
-  }
 });
 
 </script>
@@ -3642,6 +3758,30 @@ function injectVisuals(){
 } // end injectVisuals
 
 document.addEventListener('DOMContentLoaded', injectVisuals);
+</script>
+
+<!-- ===== FIREBASE ===== -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+<script>
+(function(){
+  try{
+    var firebaseConfig = {
+      databaseURL: "https://icu-nursing-analytics-default-rtdb.europe-west1.firebasedatabase.app/"
+    };
+    var app = firebase.initializeApp(firebaseConfig);
+    window.db = firebase.database();
+    // Update visitor badge once Firebase is ready
+    db.ref('analytics/visits/total').once('value').then(function(s){
+      var n=s.val()||0;
+      var el=document.getElementById('vb-num');
+      if(el) el.textContent=n;
+    });
+  }catch(e){
+    console.warn('Firebase init failed — site continues without analytics.', e);
+    window.db = null;
+  }
+})();
 </script>
 
 </body>
