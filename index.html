@@ -794,20 +794,18 @@ body{font-family:'Nunito',sans-serif;background:var(--gray50);color:var(--text);
 
 /* ── TOPBAR VISITOR COUNT ── */
 #topbar-visitors{
-  display:flex;align-items:center;gap:5px;
-  font-size:11px;font-weight:700;color:rgba(255,255,255,.55);
-  padding:0 14px;white-space:nowrap;position:relative;
+  display:flex;align-items:center;gap:6px;
+  font-size:13px;font-weight:700;color:#00BCD4;
+  background:rgba(0,188,212,.15);
+  border:1px solid rgba(0,188,212,.5);
+  border-radius:20px;padding:4px 12px;
+  white-space:nowrap;
   user-select:none;-webkit-user-select:none;
+  cursor:default;
 }
-#topbar-visitors .tv-count{color:#00BCD4;font-size:13px;font-weight:900}
-#topbar-visitors.admin-hold::after{
-  content:'';
-  position:absolute;inset:-4px;border-radius:10px;
-  border:2px solid transparent;
-  background:conic-gradient(#00BCD4 var(--hold-pct,0%),transparent var(--hold-pct,0%)) border-box;
-  -webkit-mask:linear-gradient(#fff 0 0) padding-box,linear-gradient(#fff 0 0);
-  -webkit-mask-composite:destination-out;mask-composite:exclude;
-  pointer-events:none;
+#topbar-visitors.is-admin{
+  border-color:rgba(0,188,212,.85);
+  cursor:pointer;
 }
 @property --hold-pct{syntax:'<percentage>';inherits:false;initial-value:0%}
 @keyframes holdProgress{from{--hold-pct:0%}to{--hold-pct:100%}}
@@ -3166,31 +3164,14 @@ function fetchTopbarVisitors(){
 }
 setInterval(fetchTopbarVisitors, 60000);
 
-// ── Admin: long-press on topbar visitor count → dashboard ──
-if(window._isAdmin){
-  var tvEl = document.getElementById('topbar-visitors');
-  if(tvEl){
+// ── Topbar visitor count click ──
+var tvEl = document.getElementById('topbar-visitors');
+if(tvEl){
+  if(window._isAdmin){
     tvEl.style.cursor = 'pointer';
-    tvEl.title = 'Hold 2s to open analytics';
-    function tvStartHold(){
-      tvEl.classList.add('admin-hold');
-      tvEl.style.setProperty('--hold-pct','0%');
-      tvEl.style.animation='holdProgress 2s linear forwards';
-      holdTimer = setTimeout(function(){
-        tvCancelHold();
-        openAnalytics();
-      }, 2000);
-    }
-    function tvCancelHold(){
-      clearTimeout(holdTimer);
-      tvEl.classList.remove('admin-hold');
-      tvEl.style.animation='none';
-      tvEl.style.setProperty('--hold-pct','0%');
-    }
-    tvEl.addEventListener('pointerdown', tvStartHold);
-    tvEl.addEventListener('pointerup',   tvCancelHold);
-    tvEl.addEventListener('pointerleave',tvCancelHold);
-    tvEl.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+    tvEl.title = 'Click to open analytics';
+    tvEl.classList.add('is-admin');
+    tvEl.addEventListener('click', function(){ openAnalytics(); });
   }
 }
 
